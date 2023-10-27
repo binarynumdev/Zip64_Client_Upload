@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Adding concurrently multiple entries in a zip file</title>
+</head>
+
+<body>
+    <button id="downloadBtn">Download as ZIP</button>
+
+    <script type=module>
+        const filelistJson = `
+        [
+            {
+                "id": 16031106,
+                "filename": "1000mb.bin",
+                "filesize": 32,
+                "folderId": 1906715,
+                "path": "",
+                "moddate": 1600341178,
+                "url": "https://mirror.nforce.com/pub/speedtests/"
+            },
+            {
+                "id": 16031109,
+                "filename": "1000mb.bin",
+                "filesize": 9472,
+                "folderId": 1906715,
+                "path": "one/two",
+                "moddate": 1578226596,
+                "url": "https://mirror.nforce.com/pub/speedtests/"
+            },
+            {
+                "id": 16031111,
+                "filename": "1000mb.bin",
+                "filesize": 3968,
+                "folderId": 1906715,
+                "path": "three",
+                "moddate": 1606647429,
+                "url": "https://mirror.nforce.com/pub/speedtests/"
+            }
+        ]`;
+
+        const filelist = JSON.parse(filelistJson);
+        console.log(filelist);
+        
+        document.getElementById('downloadBtn').addEventListener('click', async function () {
+            for (let i = 0; i < filelist.length; i++) {
+                const fileData = filelist[i];
+                downloadFile(undefined, fileData);
+            }
+        });
+
+        function downloadFile(blob, fileData) {
+            const link = Object.assign(document.createElement("a"), {
+                download: fileData.filename,
+                href: fileData.url + fileData.filename,
+            });
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);  
+        }
+    </script>
+</body>
+
+</html>
